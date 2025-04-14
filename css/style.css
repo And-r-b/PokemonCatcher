@@ -80,6 +80,22 @@ body {
     color: white;
 }
 
+#genProgressSection {
+    margin-top: 20px;
+    text-align: left;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  #genProgressList div {
+    padding: 5px 0;
+    font-weight: bold;
+  }
+
 
 .tooltip {
     visibility: hidden; /* Hide the tooltip by default */

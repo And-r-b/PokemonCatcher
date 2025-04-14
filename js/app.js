@@ -108,6 +108,7 @@ const loadCollection = () => {
   });
 
   trackerDiv.innerText = `Caught ${Object.keys(unique).length} / ${TOTAL_POKEMON}`;
+  displayGenProgress();
 };
 
 const catchPokemon = async () => {
@@ -144,7 +145,7 @@ const catchPokemon = async () => {
 
     loadCollection();
     checkAchievements();
-
+    displayGenProgress();
     setTimeout(() => {
       const cards = document.querySelectorAll('.pokemon-card');
       const lastCard = cards[cards.length - 1];
@@ -159,12 +160,14 @@ const resetGame = () => {
   collectionDiv.innerHTML = '';
   caughtPokemonDiv.innerHTML = '';
   loadCollection();
+  displayGenProgress();
 };
 
 const fullResetGame = () => {
   localStorage.clear();
   resetGame();
   displayAchievements();
+  displayGenProgress();
 };
 
 const checkAchievements = () => {
@@ -196,6 +199,27 @@ const checkAchievements = () => {
     achievements.allCaught = true;
     localStorage.setItem('achievements', JSON.stringify(achievements));
     showFinalCongrats();
+  }
+};
+
+const displayGenProgress = () => {
+  const caught = JSON.parse(localStorage.getItem('caught')) || [];
+  const caughtIds = new Set(caught.map(p => p.id));
+  const progressDiv = document.getElementById('genProgressList');
+  if (!progressDiv) return;
+
+  progressDiv.innerHTML = ''; // Clear before updating
+
+  for (const [key, gen] of Object.entries(generations)) {
+    let count = 0;
+    for (let i = gen.start; i <= gen.end; i++) {
+      if (caughtIds.has(i)) count++;
+    }
+
+    const total = gen.end - gen.start + 1;
+    const genProgress = document.createElement('div');
+    genProgress.textContent = `${key.toUpperCase()}: ${count} / ${total}`;
+    progressDiv.appendChild(genProgress);
   }
 };
 
