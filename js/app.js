@@ -1,23 +1,97 @@
 const throwBtn = document.getElementById('throwBtn');
 const resetBtn = document.getElementById('resetBtn');
+const fullResetBtn = document.getElementById('fullResetBtn');
 const animationArea = document.getElementById('animationArea');
 const caughtPokemonDiv = document.getElementById('caughtPokemon');
 const collectionDiv = document.getElementById('collection');
-const trackerDiv = document.getElementById('tracker'); // New tracker display area
+const trackerDiv = document.getElementById('tracker');
+const specialPokemonDiv = document.getElementById('specialPokemonDiv');
+
+const TOTAL_POKEMON = 1025;
+
+const generations = {
+  gen1: { start: 1, end: 151 },
+  gen2: { start: 152, end: 251 },
+  gen3: { start: 252, end: 386 },
+  gen4: { start: 387, end: 493 },
+  gen5: { start: 494, end: 649 },
+  gen6: { start: 650, end: 721 },
+  gen7: { start: 722, end: 809 },
+  gen8: { start: 810, end: 898 },
+  gen9: { start: 899, end: 1025 }
+};
+
+const showFinalCongrats = () => {
+  const congrats = document.createElement('div');
+  congrats.className = 'final-congrats';
+  congrats.innerHTML = `
+    🎉 <strong>Congratulations!</strong> 🎉<br>
+    You've caught <strong>ALL 1025 Pokémon!</strong> You're a true Pokémon Master!
+  `;
+  document.body.appendChild(congrats);
+
+  // Optional: Auto-hide after a few seconds
+  setTimeout(() => {
+    congrats.remove();
+  }, 8000);
+};
+
+const achievementRewards = {
+  gen1: {
+    name: "Gen 1 Master",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+    tooltip: "Caught all Pokémon from Generation 1!"
+  },
+  gen2: {
+    name: "Gen 2 Master",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/250.png",
+    tooltip: "Caught all Pokémon from Generation 2!"
+  },
+  gen3: {
+    name: "Gen 3 Master",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/382.png",
+    tooltip: "Caught all Pokémon from Generation 3!"
+  },
+  gen4: {
+    name: "Gen 4 Master",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/483.png",
+    tooltip: "Caught all Pokémon from Generation 4!"
+  },
+  gen5: {
+    name: "Gen 5 Master",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/643.png",
+    tooltip: "Caught all Pokémon from Generation 5!"
+  },
+  gen6: {
+    name: "Gen 6 Master",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/718.png",
+    tooltip: "Caught all Pokémon from Generation 6!"
+  },
+  gen7: {
+    name: "Gen 7 Master",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/791.png",
+    tooltip: "Caught all Pokémon from Generation 7!"
+  },
+  gen8: {
+    name: "Gen 8 Master",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/898.png",
+    tooltip: "Caught all Pokémon from Generation 8!"
+  },
+  gen9: {
+    name: "Gen 9 Master",
+    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1008.png",
+    tooltip: "Caught all Pokémon from Generation 9!"
+  }
+};
 
 const loadCollection = () => {
   const stored = JSON.parse(localStorage.getItem('caught')) || [];
-  const specialPokemon = JSON.parse(localStorage.getItem('specialPokemon')) || null; // Get special Pokémon
-
-  collectionDiv.innerHTML = ''; // Clear regular collection
-
-  // If the special Pokémon exists, display it in the dedicated section
-  if (specialPokemon) {
-    displaySpecialPokemon(specialPokemon);
-  }
-
-  // Load regular caught Pokémon
-  stored.forEach((pokemon) => {
+  collectionDiv.innerHTML = '';
+  const unique = stored.reduce((map, p) => {
+    map[p.id] = p;
+    return map;
+  }, {});
+  Object.values(unique).forEach(pokemon => {
     const div = document.createElement('div');
     div.className = 'pokemon-card';
 
@@ -33,75 +107,9 @@ const loadCollection = () => {
     collectionDiv.appendChild(div);
   });
 
-  // Update tracker information
-  updateTracker(stored);
+  trackerDiv.innerText = `Caught ${Object.keys(unique).length} / ${TOTAL_POKEMON}`;
 };
 
-const updateTracker = (caughtPokemons) => {
-  const totalPokemon = 1025;  // Total number of Pokémon in the Pokédex (Gen 1-9)
-  const caughtCount = caughtPokemons.length;
-  const remainingCount = totalPokemon - caughtCount;
-
-  // Display how many Pokémon are caught and how many are left to catch
-  trackerDiv.innerHTML = `
-    <p>You have caught ${caughtCount} Pokémon!</p>
-    <p>You have ${remainingCount} Pokémon left to catch!</p>
-  `;
-};
-
-const checkForCompletion = (caughtPokemons) => {
-  const totalPokemon = 1025;
-  if (caughtPokemons.length === totalPokemon) {
-    // Show celebration message
-    celebrateCompletion();
-
-    // Give a reward for catching all Pokémon
-    giveReward();
-  }
-};
-
-const celebrateCompletion = () => {
-  caughtPokemonDiv.innerHTML = `
-    <p>Congratulations! You've caught all ${1025} Pokémon!</p>
-    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/master-ball.png" alt="Master Ball" width="100">
-    <p>You're a true Pokémon Master!</p>
-  `;
-};
-
-const displaySpecialPokemon = (specialPokemon) => {
-  const specialPokemonDiv = document.getElementById('specialPokemonDiv');
-  specialPokemonDiv.innerHTML = `
-    <div class="pokemon-card" id="specialPokemonCard">
-      <img src="${specialPokemon.image}" alt="${specialPokemon.name}" width="100">
-      <div>${specialPokemon.name}</div>
-      <div class="tooltip">
-        <p><strong>Pokémon Master!</strong></p>
-        <p>Managed to catch all the Pokémon once!</p>
-      </div>
-    </div>
-  `;
-};
-
-
-const giveReward = () => {
-  const specialPokemon = {
-    name: "Mew",
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/151.png"
-  };
-
-  // Store the special Pokémon in local storage
-  localStorage.setItem('specialPokemon', JSON.stringify(specialPokemon));
-
-  // Display the special Pokémon in the separate section
-  displaySpecialPokemon(specialPokemon);
-
-  caughtPokemonDiv.innerHTML += `
-    <p>As a reward for catching all 1025 Pokémon, you receive a special Pokémon: ${specialPokemon.name}!</p>
-    <img src="${specialPokemon.image}" alt="${specialPokemon.name}" width="100">
-  `;
-};
-
-// Modify catchPokemon to check for completion
 const catchPokemon = async () => {
   const ball = document.createElement('img');
   ball.src = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png';
@@ -111,76 +119,133 @@ const catchPokemon = async () => {
   setTimeout(async () => {
     animationArea.innerHTML = '';
 
-    const randomId = Math.floor(Math.random() * 1025) + 1; // Gen 1-1025
+    const randomId = Math.floor(Math.random() * TOTAL_POKEMON) + 1;
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
     const data = await response.json();
 
     const pokemon = {
+      id: data.id,
       name: data.name.charAt(0).toUpperCase() + data.name.slice(1),
       image: data.sprites.front_default
     };
 
     const caught = JSON.parse(localStorage.getItem('caught')) || [];
-    
-    // Check for duplicates
-    if (caught.some(existingPokemon => existingPokemon.name === pokemon.name)) {
-      caughtPokemonDiv.innerHTML = `
-        <p>You already caught a ${pokemon.name}!</p>
-      `;
-    } else {
+    const alreadyCaught = caught.some(p => p.id === pokemon.id);
+
+    caughtPokemonDiv.innerHTML = `
+      <p>You ${alreadyCaught ? 'already have' : 'caught'} a ${pokemon.name}!</p>
+      <img src="${pokemon.image}" alt="${pokemon.name}" width="100">
+    `;
+
+    if (!alreadyCaught) {
       caught.push(pokemon);
       localStorage.setItem('caught', JSON.stringify(caught));
-      caughtPokemonDiv.innerHTML = `
-        <p>You caught a ${pokemon.name}!</p>
-        <img src="${pokemon.image}" alt="${pokemon.name}" width="100">
-      `;
     }
 
     loadCollection();
+    checkAchievements();
 
-    // Check for completion
-    checkForCompletion(caught);
-
-    // Animate the last added card
     setTimeout(() => {
       const cards = document.querySelectorAll('.pokemon-card');
       const lastCard = cards[cards.length - 1];
-      lastCard.classList.add('animate');
+      if (lastCard) lastCard.classList.add('animate');
     }, 50);
 
   }, 1200);
 };
 
 const resetGame = () => {
-  // Save special Pokémon before clearing other caught data
-  const specialPokemon = localStorage.getItem('specialPokemon');
-  
-  // Clear caught Pokémon data
   localStorage.removeItem('caught');
-  
-  // Restore the special Pokémon after reset
-  if (specialPokemon) {
-    localStorage.setItem('specialPokemon', specialPokemon);
-  }
-
-  collectionDiv.innerHTML = ''; // Clear regular Pokémon collection
-  caughtPokemonDiv.innerHTML = ''; // Clear message area
-  trackerDiv.innerHTML = ''; // Reset tracker display
-  loadCollection(); // Re-load collections including the special Pokémon
+  collectionDiv.innerHTML = '';
+  caughtPokemonDiv.innerHTML = '';
+  loadCollection();
 };
 
 const fullResetGame = () => {
-  localStorage.removeItem('caught');
-  localStorage.removeItem('specialPokemon');
-
-  collectionDiv.innerHTML = '';
-  caughtPokemonDiv.innerHTML = '';
-  document.getElementById('specialPokemonDiv').innerHTML = '';
+  localStorage.clear();
+  resetGame();
+  displayAchievements();
 };
 
-document.getElementById('fullResetBtn').addEventListener('click', fullResetGame);
+const checkAchievements = () => {
+  const caught = JSON.parse(localStorage.getItem('caught')) || [];
+  const caughtIds = new Set(caught.map(p => p.id));
+  const achievements = JSON.parse(localStorage.getItem('achievements')) || {};
+  let changed = false;
 
+  for (const [key, gen] of Object.entries(generations)) {
+    let completed = true;
+    for (let i = gen.start; i <= gen.end; i++) {
+      if (!caughtIds.has(i)) {
+        completed = false;
+        break;
+      }
+    }
+    if (completed && !achievements[key]) {
+      achievements[key] = true;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    localStorage.setItem('achievements', JSON.stringify(achievements));
+    displayAchievements();
+  }
+  const totalCaught = caughtIds.size;
+  if (totalCaught === TOTAL_POKEMON && !achievements.allCaught) {
+    achievements.allCaught = true;
+    localStorage.setItem('achievements', JSON.stringify(achievements));
+    showFinalCongrats();
+  }
+};
+
+const displayAchievements = () => {
+  const achievements = JSON.parse(localStorage.getItem('achievements')) || {};
+  specialPokemonDiv.innerHTML = '';
+
+  for (const [key, reward] of Object.entries(achievementRewards)) {
+    if (achievements[key]) {
+      const card = document.createElement('div');
+      card.className = 'pokemon-card';
+      card.style.position = 'relative';
+
+      const img = document.createElement('img');
+      img.src = reward.image;
+      img.alt = reward.name;
+
+      const tooltip = document.createElement('div');
+      tooltip.className = 'tooltip';
+      tooltip.innerText = reward.tooltip;
+      tooltip.style.position = 'absolute';
+      tooltip.style.bottom = '110%';
+      tooltip.style.left = '50%';
+      tooltip.style.transform = 'translateX(-50%)';
+      tooltip.style.background = '#333';
+      tooltip.style.color = '#fff';
+      tooltip.style.padding = '5px 10px';
+      tooltip.style.borderRadius = '8px';
+      tooltip.style.fontSize = '14px';
+      tooltip.style.display = 'none';
+      tooltip.style.whiteSpace = 'nowrap';
+      tooltip.style.zIndex = '1';
+
+      card.addEventListener('mouseenter', () => {
+        tooltip.style.display = 'block';
+      });
+      card.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+      });
+
+      card.appendChild(img);
+      card.appendChild(tooltip);
+      specialPokemonDiv.appendChild(card);
+    }
+  }
+};
 
 throwBtn.addEventListener('click', catchPokemon);
 resetBtn.addEventListener('click', resetGame);
+if (fullResetBtn) fullResetBtn.addEventListener('click', fullResetGame);
+
 loadCollection();
+displayAchievements();
