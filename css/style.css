@@ -5,6 +5,13 @@ body {
     text-align: center;
     padding: 20px;
 }
+
+/* Hover effect for all buttons */
+button:hover {
+    transform: scale(1.05); /* Slightly enlarge button */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+}
+
 #throwBtn, #resetBtn {
     padding: 10px 20px;
     font-size: 18px;
@@ -17,10 +24,18 @@ body {
     background-color: #ef5350;
     color: white;
 }
+#throwBtn:hover {
+    background-color: #b33f3d;
+}
 #resetBtn {
     background-color: #42a5f5;
     color: white;
 }
+
+#resetBtn:hover {
+    background-color: #327cb8;
+}
+
 #animationArea {
     margin-top: 40px;
     height: 200px;
@@ -78,6 +93,10 @@ body {
     margin: 5px;
     background-color: #8e44ad; /* Purple shade */
     color: white;
+}
+
+#fullResetBtn:hover {
+    background-color: #66327c; /* Purple shade */
 }
 
 #genProgressSection {
