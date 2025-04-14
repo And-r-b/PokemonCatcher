@@ -1,6 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     background: #f0f8ff;
+    background-color: rgba(2, 113, 35, 0.589);
     text-align: center;
     padding: 20px;
 }
@@ -30,7 +31,7 @@ body {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    animation: throw 1s ease forwards;
+    animation: throw 2s ease forwards;
 }
  @keyframes throw {
     0% { top: 0; opacity: 1; }
@@ -63,7 +64,7 @@ body {
     width: 80px;
     height: 80px;
 }
-  .pokemon-card.animate {
+.pokemon-card.animate {
     animation: pop 0.5s ease;
 }
 @keyframes pop {
