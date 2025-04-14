@@ -4,14 +4,21 @@ body {
     text-align: center;
     padding: 20px;
   }
-  #throwBtn {
+  #throwBtn, #resetBtn {
     padding: 10px 20px;
     font-size: 18px;
     cursor: pointer;
-    background-color: #ef5350;
-    color: white;
     border: none;
     border-radius: 10px;
+    margin: 5px;
+  }
+  #throwBtn {
+    background-color: #ef5350;
+    color: white;
+  }
+  #resetBtn {
+    background-color: #42a5f5;
+    color: white;
   }
   #animationArea {
     margin-top: 40px;
@@ -45,6 +52,10 @@ body {
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 10px;
-    width: 100px;
+    width: 120px;
     background: white;
+  }
+  .pokemon-card img {
+    width: 80px;
+    height: 80px;
   }
