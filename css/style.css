@@ -96,6 +96,22 @@ body {
     font-weight: bold;
   }
 
+  #toggleGenTrackerBtn {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    margin: 5px;
+    background-color: #42a5f5; /* You can customize this color */
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+#toggleGenTrackerBtn:hover {
+    background-color: #1e88e5; /* Slightly darker color on hover */
+}
+
 
 .tooltip {
     visibility: hidden; /* Hide the tooltip by default */

@@ -84,6 +84,20 @@ const achievementRewards = {
   }
 };
 
+const toggleGenTrackerBtn = document.getElementById('toggleGenTrackerBtn');
+const genProgressTracker = document.getElementById('genProgressSection');
+
+toggleGenTrackerBtn.addEventListener('click', () => {
+  // Toggle visibility of the Gen tracker
+  if (genProgressSection.style.display === 'none') {
+    genProgressSection.style.display = 'block';
+    toggleGenTrackerBtn.innerText = 'Hide Gen Tracker'; // Change button text
+  } else {
+    genProgressSection.style.display = 'none';
+    toggleGenTrackerBtn.innerText = 'Show Gen Tracker'; // Change button text
+  }
+});
+
 const loadCollection = () => {
   const stored = JSON.parse(localStorage.getItem('caught')) || [];
   collectionDiv.innerHTML = '';
