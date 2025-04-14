@@ -56,6 +56,9 @@ body {
     background: white;
     transition: transform 0.3s ease;
 }
+.pokemon-card:hover {
+    transform: scale(1.1);
+}
   .pokemon-card img {
     width: 80px;
     height: 80px;
